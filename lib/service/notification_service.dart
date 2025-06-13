@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:get/get.dart';
 
 class NotifyHelper {
@@ -7,16 +9,16 @@ class NotifyHelper {
       FlutterLocalNotificationsPlugin(); //
 
   initializeNotification() async {
-    //tz.initializeTimeZones();
+    tz.initializeTimeZones();
     // this is for latest iOS settings
     final DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings(
-            requestSoundPermission: false,
-            requestBadgePermission: false,
-            requestAlertPermission: false,
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
 
-           // onDidReceiveLocalNotification: onDidReceiveLocalNotification
-           );
+      // onDidReceiveLocalNotification: onDidReceiveLocalNotification
+    );
 
     final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings("appicon");
@@ -27,19 +29,55 @@ class NotifyHelper {
       android: initializationSettingsAndroid,
     );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-       // onSelectNotification: selectNotification
+        // onSelectNotification: selectNotification
         onDidReceiveNotificationResponse: selectNotification);
   }
-  
+
+  displayNotification({required String title, required String body}) async {
+    print("doing test");
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id', 'your channel name',
+        channelDescription: 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high);
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+
   void requestIOSPermissions() {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
+
+  scheduledNotification() async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'scheduled title',
+        'theme changes 5 seconds ago',
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 3)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'your channel id', 'your channel name',
+                channelDescription: 'your channel description'),
+            ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+    print("scheduled start");
   }
 
   Future selectNotification(NotificationResponse payload) async {
@@ -48,7 +86,9 @@ class NotifyHelper {
     } else {
       print("Notification Done");
     }
-     Get.to(()=>Container(color: Colors.white,));
+    Get.to(() => Container(
+          color: Colors.white,
+        ));
   }
   // Future onDidReceiveLocalNotification(
   //     int id, String? title, String? body, String? payload) async {
