@@ -16,6 +16,7 @@ class Themes {
     scaffoldBackgroundColor: white,
     appBarTheme: AppBarTheme(
         backgroundColor: white, iconTheme: IconThemeData(color: Colors.black)),
+    
     brightness: Brightness.light,
   );
 

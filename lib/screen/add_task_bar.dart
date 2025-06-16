@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_list/config/theme.dart';
+import 'package:todo_list/controllers/task_controller.dart';
+import 'package:todo_list/models/task.dart';
 import 'package:todo_list/screen/widgets/button.dart';
 import 'package:todo_list/screen/widgets/input_field.dart';
 
@@ -13,6 +15,7 @@ class AddTaskBar extends StatefulWidget {
 }
 
 class _AddTaskBarState extends State<AddTaskBar> {
+  final TaskController _taskController = Get.put(TaskController());
   final _titleController = TextEditingController();
   final _noteController = TextEditingController();
   DateTime _selectDate = DateTime.now();
@@ -54,7 +57,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
               ),
               MyInputField(
                 title: "Date",
-                hint: DateFormat("d/M/y").format(_selectDate),
+                hint: DateFormat.yMd().format(_selectDate),
                 widget: IconButton(
                     onPressed: () {
                       print("object");
@@ -176,13 +179,30 @@ class _AddTaskBarState extends State<AddTaskBar> {
 
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      Get.back();
+      _addTaskToDB();
+      //Get.back();
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
       Get.snackbar("Requird", "All fields are required !",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: yellowClr,
           icon: Icon(Icons.warning_amber_rounded));
     }
+  }
+
+  _addTaskToDB() async {
+    int value = await _taskController.addTask(
+        task: Task(
+      title: _titleController.text,
+      note: _noteController.text,
+      date: DateFormat.yMd().format(_selectDate),
+      startTime: _startTime,
+      endTime: _endTime,
+      remind: _selectedRemind,
+      repeat: _selectedRepeat,
+      color: _selectColor,
+      isCompleted: 0,
+    ));
+    print("My id is $value ");
   }
 
   _appBar(BuildContext context) {
@@ -280,10 +300,12 @@ class _AddTaskBarState extends State<AddTaskBar> {
     if (isStartTime) {
       setState(() {
         _startTime = _formatedTime;
+        print(_startTime);
       });
     } else {
       setState(() {
         _endTime = _formatedTime;
+        print(_endTime);
       });
     }
   }

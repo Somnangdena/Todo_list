@@ -32,10 +32,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: _appBar(),
       body: Column(
-        children: [_addTaskBar(), _addDateBar()],
+        children: [
+          _addTaskBar(),
+          _addDateBar(),
+          // _showTasks(),
+        ],
       ),
     );
   }
+
+  // _showTasks() {
+  //   return Expanded(
+  //     child:
+  //     );
+  // }
 
   _addDateBar() {
     return Container(
@@ -44,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
         DateTime.now(),
         height: 100,
         width: 80,
-        
         initialSelectedDate: DateTime.now(),
         selectedTextColor: white,
         selectionColor: primaryColor,
@@ -86,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          MyButton(label: " + Add Task ", onTap: () => Get.to(AddTaskBar()))
+          MyButton(
+              label: " + Add Task ", onTap: () => Get.to(() => AddTaskBar()))
         ],
       ),
     );
@@ -107,9 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {});
         },
         child: Icon(
-          Get.isDarkMode
-              ? Icons.nightlight_round_outlined
-              : Icons.wb_sunny_outlined,
+          ThemeService().loadThemeFromBox()
+              ? Icons.wb_sunny_outlined
+              : Icons.nightlight_round_outlined,
           size: 20,
         ),
       ),
