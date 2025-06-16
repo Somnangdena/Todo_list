@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
   var notifyHelper = NotifyHelper();
   @override
   void initState() {
@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         DateTime.now(),
         height: 100,
         width: 80,
+        
         initialSelectedDate: DateTime.now(),
         selectedTextColor: white,
         selectionColor: primaryColor,
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey),
         ),
         onDateChange: (date) {
-          _selectedDate = date;
+          selectedDate = date;
         },
       ),
     );
@@ -85,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          MyButton(label: " + Add Task ", onTap: () =>Get.to(AddTaskBar()))
+          MyButton(label: " + Add Task ", onTap: () => Get.to(AddTaskBar()))
         ],
       ),
     );

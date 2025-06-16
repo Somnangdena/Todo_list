@@ -38,11 +38,12 @@ class MyInputField extends StatelessWidget {
               children: [
                 Expanded(
                     child: TextFormField(
+                  readOnly: widget == null ? false : true,
                   autofocus: false,
                   cursorColor:
                       Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
                   controller: controller,
-                  style: subtitleStyle,
+                  style: titleStyle,
                   decoration: InputDecoration(
                       hintText: hint,
                       hintStyle: subtitleStyle,
@@ -51,7 +52,12 @@ class MyInputField extends StatelessWidget {
                           UnderlineInputBorder(borderSide: BorderSide.none),
                       enabledBorder:
                           UnderlineInputBorder(borderSide: BorderSide.none)),
-                ))
+                )),
+                widget == null
+                    ? SizedBox()
+                    : SizedBox(
+                        child: widget,
+                      )
               ],
             ),
           )

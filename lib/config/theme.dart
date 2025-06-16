@@ -21,7 +21,7 @@ class Themes {
 
   static final dark = ThemeData(
       primaryColor: darkGreyClr,
-      scaffoldBackgroundColor: darkHeaderClr,
+      scaffoldBackgroundColor: darkGreyClr,
       brightness: Brightness.dark);
 }
 
@@ -30,7 +30,7 @@ TextStyle get subHeadingStyle {
       textStyle: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Get.isDarkMode ? Colors.grey[400] : Colors.grey));
+          color: Get.isDarkMode ? Colors.grey[600] : Colors.grey));
 }
 
 TextStyle get headingStyle {
@@ -51,5 +51,5 @@ TextStyle get subtitleStyle {
       textStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Get.isDarkMode ? Colors.grey[100] : Colors.grey[600]));
+          color: Get.isDarkMode ? Colors.grey[300] : Colors.grey[600]));
 }
