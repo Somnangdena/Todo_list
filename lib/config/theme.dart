@@ -15,13 +15,17 @@ class Themes {
     primaryColor: primaryColor,
     scaffoldBackgroundColor: white,
     appBarTheme: AppBarTheme(
-        backgroundColor: white, iconTheme: IconThemeData(color: Colors.black)),
-    
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: white,
+        iconTheme: IconThemeData(color: Colors.black)),
     brightness: Brightness.light,
+
   );
 
   static final dark = ThemeData(
       primaryColor: darkGreyClr,
+      appBarTheme:
+          AppBarTheme(surfaceTintColor: Colors.transparent, color: darkGreyClr),
       scaffoldBackgroundColor: darkGreyClr,
       brightness: Brightness.dark);
 }

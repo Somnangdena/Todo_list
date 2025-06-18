@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:todo_list/config/theme.dart';
 import 'package:todo_list/controllers/task_controller.dart';
 import 'package:todo_list/models/task.dart';
-import 'package:todo_list/screen/widgets/button.dart';
-import 'package:todo_list/screen/widgets/input_field.dart';
+
+import '../widgets/button.dart';
+import '../widgets/input_field.dart';
 
 class AddTaskBar extends StatefulWidget {
   const AddTaskBar({super.key});
@@ -121,7 +122,10 @@ class _AddTaskBarState extends State<AddTaskBar> {
                     iconSize: 30,
                     elevation: 4,
                     underline: SizedBox(),
-                    style: subtitleStyle,
+                    style: titleStyle,
+                    dropdownColor:
+                        Get.isDarkMode ? Colors.grey[800] : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
                     onChanged: (String? newVale) {
                       setState(() {
                         _selectedRemind = int.parse(newVale!);
@@ -136,10 +140,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                        child: Text(value),
                       );
                     }).toList(),
                     icon: Icon(
@@ -149,7 +150,10 @@ class _AddTaskBarState extends State<AddTaskBar> {
                     iconSize: 30,
                     elevation: 4,
                     underline: SizedBox(),
-                    style: subtitleStyle,
+                    style: titleStyle,
+                    dropdownColor:
+                        Get.isDarkMode ? Colors.grey[800] : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
                     onChanged: (String? newVale) {
                       setState(() {
                         _selectedRepeat = newVale!;
@@ -180,7 +184,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
       _addTaskToDB();
-      //Get.back();
+      Get.back();
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
       Get.snackbar("Requird", "All fields are required !",
           snackPosition: SnackPosition.BOTTOM,
