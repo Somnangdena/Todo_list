@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:get/get.dart';
+import 'package:todo_list/screen/notified_page.dart';
 
 import '../models/task.dart';
 
@@ -23,7 +23,7 @@ class NotifyHelper {
     );
 
     final AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings("appicon");
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     final InitializationSettings initializationSettings =
         InitializationSettings(
@@ -68,9 +68,9 @@ class NotifyHelper {
 
   scheduledNotification(int hour, int minutes, Task task) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'scheduled title',
-        'theme changes 5 seconds ago',
+        task.id!.toInt(),
+        task.title,
+        task.note,
         _coverTime(hour, minutes),
 
         //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 3)),
@@ -80,12 +80,13 @@ class NotifyHelper {
               channelDescription: 'your channel description'),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time);
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: "${task.title}|${task.note}|");
   }
 
-  scheduledNotification1() async {
+  /* scheduledNotification1() async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
+        2,
         'scheduled title',
         'theme changes 5 seconds ago',
         // _coverTime(hour, minutes),
@@ -98,7 +99,7 @@ class NotifyHelper {
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
-  }
+  } */
 
   tz.TZDateTime _coverTime(int hour, int minutes) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
@@ -116,15 +117,14 @@ class NotifyHelper {
     tz.setLocalLocation(tz.getLocation(timeZone));
   }
 
-  Future selectNotification(NotificationResponse payload) async {
+  Future selectNotification(NotificationResponse? notificationResponse) async {
+    final String? payload = notificationResponse?.payload;
     if (payload != null) {
       print('notification payload: $payload');
     } else {
       print("Notification Done");
     }
-    Get.to(() => Container(
-          color: Colors.white,
-        ));
+    Get.to(() => NotifiedPage(label: payload));
   }
   // Future onDidReceiveLocalNotification(
   //     int id, String? title, String? body, String? payload) async {

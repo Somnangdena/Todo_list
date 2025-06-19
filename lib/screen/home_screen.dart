@@ -268,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //     body: Get.isDarkMode
           //         ? "Activated Light Theme"
           //         : "Activated Dark Theme");
-           notifyHelper.scheduledNotification1();
+          // notifyHelper.scheduledNotification1();
           setState(() {});
         },
         child: Icon(
