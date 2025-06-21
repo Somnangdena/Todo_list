@@ -1,5 +1,6 @@
-import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           _addTaskBar(),
+          // _addDateBar(),
           _addDateBar(),
           SizedBox(
             height: 10,
@@ -52,60 +54,63 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _showTasks() {
     return Expanded(child: Obx(() {
-      return ListView.builder(
-          itemCount: _taskController.taskList.length,
-          itemBuilder: (_, index) {
-            Task task = _taskController.taskList[index];
-            print(task.toJson());
-            if (task.repeat == "Daily") {
-              // var date = DateFormat.jm().parse(task.startTime!);
-              // var myTime = DateFormat("HH:mm").format(date);
-              //print(myTime);
-              DateFormat inputFormat =
-                  DateFormat("h:mm a"); // 12-hour format with AM/PM
-              DateTime parsedTime = inputFormat.parse(task.startTime!);
-              DateFormat outputFormat = DateFormat("HH:mm"); // 24-hour format
-              String formattedTime = outputFormat.format(parsedTime);
-              notifyHelper.scheduledNotification(
-                  int.parse(formattedTime.toString().split(":")[0]),
-                  int.parse(formattedTime.toString().split(":")[1]),
-                  task);
-              print(formattedTime);
-              return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                      child: FadeInAnimation(
-                          child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          _showBottomSheet(context, task);
-                        },
-                        child: TaskTile(task),
-                      )
-                    ],
-                  ))));
-            }
+      return SlidableAutoCloseBehavior(
+        closeWhenOpened: true,
+        child: ListView.builder(
+            itemCount: _taskController.taskList.length,
+            itemBuilder: (_, index) {
+              Task task = _taskController.taskList[index];
+              //print(task.toJson());
+              if (task.repeat == "Daily") {
+                // var date = DateFormat.jm().parse(task.startTime!);
+                // var myTime = DateFormat("HH:mm").format(date);
+                //print(myTime);
+                DateFormat inputFormat =
+                    DateFormat("h:mm a"); // 12-hour format with AM/PM
+                DateTime parsedTime = inputFormat.parse(task.startTime!);
+                DateFormat outputFormat = DateFormat("HH:mm"); // 24-hour format
+                String formattedTime = outputFormat.format(parsedTime);
+                notifyHelper.scheduledNotification(
+                    int.parse(formattedTime.toString().split(":")[0]),
+                    int.parse(formattedTime.toString().split(":")[1]),
+                    task);
+                //print(formattedTime);
+                return AnimationConfiguration.staggeredList(
+                    position: index,
+                    child: SlideAnimation(
+                        child: FadeInAnimation(
+                            child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _showBottomSheet(context, task);
+                          },
+                          child: TaskTile(task),
+                        )
+                      ],
+                    ))));
+              }
 
-            if (task.date == DateFormat.yMd().format(_selectedDate)) {
-              return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                      child: FadeInAnimation(
-                          child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          _showBottomSheet(context, task);
-                        },
-                        child: TaskTile(task),
-                      )
-                    ],
-                  ))));
-            } else {
-              return Container();
-            }
-          });
+              if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                return AnimationConfiguration.staggeredList(
+                    position: index,
+                    child: SlideAnimation(
+                        child: FadeInAnimation(
+                            child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _showBottomSheet(context, task);
+                          },
+                          child: TaskTile(task),
+                        )
+                      ],
+                    ))));
+              } else {
+                return Container();
+              }
+            }),
+      );
     }));
   }
 
@@ -196,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _addDateBar() {
+  /*  _addDateBar() {
     return Container(
       margin: EdgeInsets.only(top: 20, left: 20),
       child: DatePicker(
@@ -225,6 +230,77 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+ */
+  _addDateBar() {
+    return Container(
+        margin: EdgeInsets.only(left: 15),
+        child: EasyDateTimeLine(
+          activeColor: primaryColor,
+          initialDate: DateTime.now(),
+          onDateChange: (date) {
+            setState(() {
+              _selectedDate = date;
+            });
+          },
+          headerProps: EasyHeaderProps(showSelectedDate: false),
+          dayProps: EasyDayProps(
+            height: 100,
+            width: 80,
+            todayStyle: DayStyle(
+                dayNumStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
+                ),
+                monthStrStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
+                ),
+                dayStrStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
+                )),
+            activeDayStyle: DayStyle(
+                dayNumStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w600, color: white),
+                ),
+                monthStrStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w600, color: white),
+                ),
+                dayStrStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w600, color: white),
+                )),
+            inactiveDayStyle: DayStyle(
+                dayNumStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
+                ),
+                monthStrStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
+                ),
+                dayStrStyle: GoogleFonts.lato(
+                  textStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey),
+                )),
+            borderColor: Colors.grey,
+          ),
+        ));
   }
 
   _addTaskBar() {

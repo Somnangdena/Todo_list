@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list/models/task.dart';
@@ -47,13 +49,13 @@ class DbHelper {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     } catch (e) {
-      print("Insert error: $e");
+      log("Insert error: $e");
       return -1;
     }
   }
 
   static Future<List<Task>> getTask() async {
-    print("query funtion called");
+    log("query funtion called");
     final Database dbClient = await db;
     final res = await dbClient.query(_tableName);
     return res.map((e) => Task.fromJson(e)).toList();
@@ -66,7 +68,7 @@ class DbHelper {
           _tableName, {'isCompleted': task.isCompleted = 1},
           where: 'id = ?', whereArgs: [task.id]);
     } catch (e) {
-      print("Update error: $e");
+      log("Update error: $e");
       return -1;
     }
   }
@@ -77,7 +79,7 @@ class DbHelper {
       return await dbClient
           .delete(_tableName, where: 'id=?', whereArgs: [task.id]);
     } catch (e) {
-      print("Delete error: $e");
+      log("Delete error: $e");
       return -1;
     }
   }

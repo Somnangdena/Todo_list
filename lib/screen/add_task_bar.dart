@@ -61,7 +61,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
                 hint: DateFormat.yMd().format(_selectDate),
                 widget: IconButton(
                     onPressed: () {
-                      print("object");
+                      //print("object");
                       _getDateFromUser();
                     },
                     icon: Icon(
@@ -194,7 +194,8 @@ class _AddTaskBarState extends State<AddTaskBar> {
   }
 
   _addTaskToDB() async {
-    int value = await _taskController.addTask(
+    //int value =
+     await _taskController.addTask(
         task: Task(
       title: _titleController.text,
       note: _noteController.text,
@@ -206,7 +207,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
       color: _selectColor,
       isCompleted: 0,
     ));
-    print("My id is $value ");
+   // print("My id is $value ");
   }
 
   _appBar(BuildContext context) {
@@ -275,19 +276,19 @@ class _AddTaskBarState extends State<AddTaskBar> {
   }
 
   _getDateFromUser() async {
-    DateTime? _pickerDate = await showDatePicker(
+    DateTime? pickerDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2022),
         lastDate: DateTime(2120));
 
-    if (_pickerDate != null) {
+    if (pickerDate != null) {
       setState(() {
-        _selectDate = _pickerDate;
-        print(_selectDate);
+        _selectDate = pickerDate;
+      //  print(_selectDate);
       });
     } else {
-      print("It's null or something is wrong");
+     // print("It's null or something is wrong");
     }
   }
 
@@ -295,21 +296,21 @@ class _AddTaskBarState extends State<AddTaskBar> {
     var pickedTime = await _showTimePicker();
 
     if (pickedTime == null) {
-      print("Time cancel");
+     // print("Time cancel");
       return;
     }
 
-    String _formatedTime = pickedTime.format(context);
+    String formatedTime = pickedTime.format(context);
 
     if (isStartTime) {
       setState(() {
-        _startTime = _formatedTime;
-        print(_startTime);
+        _startTime = formatedTime;
+        //print(_startTime);
       });
     } else {
       setState(() {
-        _endTime = _formatedTime;
-        print(_endTime);
+        _endTime = formatedTime;
+       // print(_endTime);
       });
     }
   }

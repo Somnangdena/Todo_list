@@ -18,8 +18,8 @@ class Themes {
         surfaceTintColor: Colors.transparent,
         backgroundColor: white,
         iconTheme: IconThemeData(color: Colors.black)),
+    
     brightness: Brightness.light,
-
   );
 
   static final dark = ThemeData(
