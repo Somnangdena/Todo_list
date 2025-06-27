@@ -8,14 +8,15 @@ import 'package:todo_list/models/task.dart';
 import '../widgets/button.dart';
 import '../widgets/input_field.dart';
 
-class AddTaskBar extends StatefulWidget {
-  const AddTaskBar({super.key});
+class EditTaskScreen extends StatefulWidget {
+  final Task task;
+  const EditTaskScreen({super.key, required this.task});
 
   @override
-  State<AddTaskBar> createState() => _AddTaskBarState();
+  State<EditTaskScreen> createState() => _EditTaskScreenState();
 }
 
-class _AddTaskBarState extends State<AddTaskBar> {
+class _EditTaskScreenState extends State<EditTaskScreen> {
   final TaskController _taskController = Get.put(TaskController());
   final _titleController = TextEditingController();
   final _noteController = TextEditingController();
@@ -32,6 +33,20 @@ class _AddTaskBarState extends State<AddTaskBar> {
   String _selectedRepeat = "None";
   List<String> repeatList = ["None", "Daily", "Weekly", "Monthly"];
   int _selectColor = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.task.title!;
+    _noteController.text = widget.task.note!;
+    _selectDate = DateFormat.yMd().parse(widget.task.date!);
+    _startTime = widget.task.startTime!;
+    _endTime = widget.task.endTime!;
+    _selectedRemind = widget.task.remind!;
+    _selectedRepeat = widget.task.repeat!;
+    _selectColor = widget.task.color!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +58,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Add Task",
+                "Edit Task",
                 style: headingStyle,
               ),
               MyInputField(
@@ -168,7 +183,7 @@ class _AddTaskBarState extends State<AddTaskBar> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _colorPallete(),
-                  MyButton(label: "Create Task", onTap: () => _validateDate())
+                  MyButton(label: "Edit Task", onTap: () => _validateDate())
                 ],
               ),
               SizedBox(
@@ -183,8 +198,13 @@ class _AddTaskBarState extends State<AddTaskBar> {
 
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      _addTaskToDB();
+      _editTasktoDB();
+      _taskController.getTask();
       Get.back();
+      Get.snackbar("Success Edit", "Your task edit success",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          icon: Icon(Icons.done_outline_sharp));
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
       Get.snackbar("Requird", "All fields are required !",
           snackPosition: SnackPosition.BOTTOM,
@@ -193,20 +213,22 @@ class _AddTaskBarState extends State<AddTaskBar> {
     }
   }
 
-  _addTaskToDB() async {
+  _editTasktoDB() async {
     //int value =
-    await _taskController.addTask(
-        task: Task(
-      title: _titleController.text,
-      note: _noteController.text,
-      date: DateFormat.yMd().format(_selectDate),
-      startTime: _startTime,
-      endTime: _endTime,
-      remind: _selectedRemind,
-      repeat: _selectedRepeat,
-      color: _selectColor,
-      isCompleted: 0,
-    ));
+    _taskController.edit(
+      task: Task(
+        id: widget.task.id,
+        title: _titleController.text,
+        note: _noteController.text,
+        date: DateFormat.yMd().format(_selectDate),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+        color: _selectColor,
+        isCompleted: 0,
+      ),
+    );
     // print("My id is $value ");
   }
 

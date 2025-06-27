@@ -14,7 +14,6 @@ class TaskController extends GetxController {
   Future<int> addTask({Task? task}) async {
     return await DbHelper.insert(task);
   }
-  
 
   void getTask() async {
     final task = await DbHelper.getTask();
@@ -27,9 +26,20 @@ class TaskController extends GetxController {
   // }
 
   void markTaskCompleted(Task task) async {
-    await DbHelper.updateUser(task);
+    await DbHelper.updateTask(task);
     getTask();
   }
+
+  Future<int> edit({required Task task}) async {
+    if (task.id == null) {
+      throw ArgumentError("Cannot edit task: ID is null");
+    }
+    return await DbHelper.editTask(task);
+  }
+
+  // Future<int> edit({Task? task}) async {
+  //   return await DbHelper.editTask(task!);
+  // }
 
   void delete(Task task) async {
     await DbHelper.delete(task);

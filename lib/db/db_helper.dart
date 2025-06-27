@@ -61,11 +61,24 @@ class DbHelper {
     return res.map((e) => Task.fromJson(e)).toList();
   }
 
-  static Future<int> updateUser(Task task) async {
+  static Future<int> updateTask(Task task) async {
     final dbClient = await db;
     try {
       return await dbClient.update(
           _tableName, {'isCompleted': task.isCompleted = 1},
+          where: 'id = ?', whereArgs: [task.id]);
+    } catch (e) {
+      log("Update error: $e");
+      return -1;
+    }
+  }
+
+  static Future<int> editTask(Task task) async {
+    final dbClient = await db;
+    try {
+      return await dbClient.update(
+          _tableName,
+          task.toJson(),
           where: 'id = ?', whereArgs: [task.id]);
     } catch (e) {
       log("Update error: $e");

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:todo_list/config/theme.dart';
 import 'package:todo_list/controllers/task_controller.dart';
 import 'package:todo_list/screen/add_task_bar.dart';
+import 'package:todo_list/screen/edit_task_screen.dart';
 import 'package:todo_list/screen/notified_page.dart';
 import 'package:todo_list/service/notification_service.dart';
 import 'package:todo_list/service/theme_service.dart';
@@ -133,7 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTapDone: (context) {
                           _taskController.markTaskCompleted(task);
                         },
-                        onTapEdit: (context) {},
+                        onTapEdit: (context) {
+                          Get.to(() => EditTaskScreen(task: task));
+                        },
                         onTapDel: (context) {
                           Get.defaultDialog(
                             titlePadding: EdgeInsets.only(top: 30),

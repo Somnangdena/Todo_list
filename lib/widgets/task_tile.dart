@@ -25,6 +25,7 @@ class TaskTile extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(bottom: 12),
       child: Slidable(
+        closeOnScroll: true,
         startActionPane: ActionPane(motion: DrawerMotion(), children: [
           SlidableAction(
             onPressed: (context) => onTapDone.call(context),
