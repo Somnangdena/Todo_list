@@ -81,7 +81,8 @@ class NotifyHelper {
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dateAndTime,
-        payload: "${task.title}|${task.note}|${task.date}|${task.startTime}|${task.endTime}|${task.isCompleted}");
+        payload:
+            "${task.title}|${task.note}|${task.date}|${task.startTime}|${task.endTime}|${task.isCompleted}");
   }
 
   /* scheduledNotification1() async {

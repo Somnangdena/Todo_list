@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_list/config/theme.dart';
+import 'package:todo_list/service/theme_service.dart';
 
 import '../../models/task.dart';
 
@@ -33,7 +34,8 @@ class TaskTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
         ]),
-        endActionPane: ActionPane(motion: DrawerMotion(), children: [
+        endActionPane:
+            ActionPane(extentRatio: 0.6, motion: DrawerMotion(), children: [
           SlidableAction(
             foregroundColor: Colors.white,
             onPressed: (context) => onTapEdit.call(context),
@@ -59,6 +61,14 @@ class TaskTile extends StatelessWidget {
             color: _getBGClr(task?.color ?? 0),
           ),
           child: Row(children: [
+            Container(
+              width: 10,
+              height: 90,
+              decoration: BoxDecoration(
+                  color: _get1BGClr(task?.color ?? 0),
+                  borderRadius: BorderRadius.circular(20)),
+              margin: EdgeInsets.only(right: 10),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,9 +77,10 @@ class TaskTile extends StatelessWidget {
                     task?.title ?? "",
                     style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: _get1BGClr(task?.color ?? 0),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -80,15 +91,22 @@ class TaskTile extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.access_time_rounded,
-                        color: Colors.grey[200],
+                        color: ThemeService().loadThemeFromBox()
+                            ? white
+                            : darkGreyClr,
                         size: 18,
                       ),
                       SizedBox(width: 4),
                       Text(
                         "${task!.startTime} - ${task!.endTime}",
                         style: GoogleFonts.lato(
-                          textStyle:
-                              TextStyle(fontSize: 13, color: Colors.grey[100]),
+                          textStyle: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: ThemeService().loadThemeFromBox()
+                                ? white
+                                : darkGreyClr,
+                          ),
                         ),
                       ),
                     ],
@@ -97,8 +115,13 @@ class TaskTile extends StatelessWidget {
                   Text(
                     task?.note ?? "",
                     style: GoogleFonts.lato(
-                      textStyle:
-                          TextStyle(fontSize: 15, color: Colors.grey[100]),
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: ThemeService().loadThemeFromBox()
+                            ? white
+                            : darkGreyClr,
+                      ),
                     ),
                   ),
                 ],
@@ -116,9 +139,11 @@ class TaskTile extends StatelessWidget {
                 task!.isCompleted == 1 ? "COMPLETED" : "TODO",
                 style: GoogleFonts.lato(
                   textStyle: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        ThemeService().loadThemeFromBox() ? white : darkGreyClr,
+                  ),
                 ),
               ),
             ),
@@ -129,6 +154,19 @@ class TaskTile extends StatelessWidget {
   }
 
   _getBGClr(int no) {
+    switch (no) {
+      case 0:
+        return bluishClr.withValues(alpha: 0.3);
+      case 1:
+        return pinkClr.withValues(alpha: 0.3);
+      case 2:
+        return yellowClr.withValues(alpha: 0.3);
+      default:
+        return bluishClr.withValues(alpha: 0.3);
+    }
+  }
+
+  _get1BGClr(int no) {
     switch (no) {
       case 0:
         return bluishClr;

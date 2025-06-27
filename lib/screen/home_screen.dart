@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
   final _taskController = Get.put(TaskController());
   var notifyHelper = NotifyHelper();
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
-
             _showTasks(),
           ],
         ),
@@ -108,6 +108,18 @@ class _HomeScreenState extends State<HomeScreen> {
               // }
 
               if (task.date == DateFormat.yMd().format(_selectedDate)) {
+                if (task.repeat == "Daily") {
+                  DateFormat inputFormat =
+                      DateFormat("h:mm a"); // 12-hour format with AM/PM
+                  DateTime parsedTime = inputFormat.parse(task.startTime!);
+                  DateFormat outputFormat =
+                      DateFormat("HH:mm"); // 24-hour format
+                  String formattedTime = outputFormat.format(parsedTime);
+                  notifyHelper.scheduledNotification(
+                      int.parse(formattedTime.toString().split(":")[0]),
+                      int.parse(formattedTime.toString().split(":")[1]),
+                      task);
+                }
                 return AnimationConfiguration.staggeredList(
                     position: index,
                     child: SlideAnimation(
@@ -277,15 +289,6 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 20,
         ),
       ),
-      actions: [
-        Icon(
-          Icons.person,
-          size: 20,
-        ),
-        SizedBox(
-          width: 20,
-        )
-      ],
     );
   }
 
