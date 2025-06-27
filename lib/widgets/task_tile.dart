@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_list/config/theme.dart';
-import 'package:todo_list/service/theme_service.dart';
 
 import '../../models/task.dart';
 
 class TaskTile extends StatelessWidget {
   final Task? task;
-  const TaskTile(this.task, {super.key});
+  final Function(BuildContext context) onTapDone;
+  final Function(BuildContext context) onTapEdit;
+  final Function(BuildContext context) onTapDel;
+
+  const TaskTile(this.task,
+      {super.key,
+      required this.onTapDone,
+      required this.onTapEdit,
+      required this.onTapDel});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,7 @@ class TaskTile extends StatelessWidget {
       child: Slidable(
         startActionPane: ActionPane(motion: DrawerMotion(), children: [
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) => onTapDone.call(context),
             backgroundColor: Colors.green,
             icon: Icons.done_rounded,
             label: 'Done',
@@ -30,7 +36,7 @@ class TaskTile extends StatelessWidget {
         endActionPane: ActionPane(motion: DrawerMotion(), children: [
           SlidableAction(
             foregroundColor: Colors.white,
-            onPressed: (context) {},
+            onPressed: (context) => onTapEdit.call(context),
             backgroundColor: Colors.amber,
             icon: Icons.edit,
             label: 'Edit',
@@ -38,7 +44,7 @@ class TaskTile extends StatelessWidget {
           ),
           SlidableAction(
             foregroundColor: Colors.white,
-            onPressed: (context) {},
+            onPressed: (context) => onTapDel.call(context),
             backgroundColor: Colors.red,
             icon: Icons.delete,
             label: 'Delete',

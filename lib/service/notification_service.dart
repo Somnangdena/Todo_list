@@ -80,8 +80,8 @@ class NotifyHelper {
               channelDescription: 'your channel description'),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time,
-        payload: "${task.title}|${task.note}|");
+        matchDateTimeComponents: DateTimeComponents.dateAndTime,
+        payload: "${task.title}|${task.note}|${task.date}|${task.startTime}|${task.endTime}|${task.isCompleted}");
   }
 
   /* scheduledNotification1() async {

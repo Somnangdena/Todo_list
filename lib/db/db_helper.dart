@@ -55,7 +55,7 @@ class DbHelper {
   }
 
   static Future<List<Task>> getTask() async {
-    log("query funtion called");
+    //log("query funtion called");
     final Database dbClient = await db;
     final res = await dbClient.query(_tableName);
     return res.map((e) => Task.fromJson(e)).toList();
